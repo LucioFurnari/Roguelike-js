@@ -1,120 +1,113 @@
-const MapContainer = document.querySelector(".map-container");
-let tileData = {
-    terrain:"",
-    wall:"||"
-}
-let iRow = 9;
-let jRow = 9;
-let iCol = 7;
-let jCol = 7;
+const mapContainer = document.querySelector(".map-container");
 
-let Tiles = [
-    ["","","","","","","","","",""," "," ","","","","","","","","","","","","",],
-    ["","","","","","","","","","","","","","","","","","","","","","","","",],
-    ["","","","","","","","","","","","","","","","","","","","","","","","",],
-    ["","","","","","","","","","","","","","||","","","","","","","","","","",],
-    ["","","","","","","","","","","","","","||","","","","","","","","","","",],
-    ["","","","","","","","","","","","","","||","","","","","","","","","","",],
-    ["","","","","","","","||","","","","","","||","","","","","","","","","","",],
-    ["","","","","","","","","","","","","","||","","","","","","","","","","",],
-    ["||","||","||","||","||","","","T","","||","||","||","||","||","||","||","||","||","||","||","||","||","||","||",],
-    ["","","","","","","","@","","","","","","","","","","","","","","","","",],
-    ["","","","","","","","","","","","","","","","","","","","","","","","",],
-    ["","","","","","","","","","","","","","","","","","","","","","","","",],
-    ["","","","","","","","","","","","","","","","","","","","","","","","",],
-    ["","","","","","","","","","","","","","","","","","","","","","","","",],
-    ["","","","","","","","","","","","","","","","","","","","","","","","",],
-    ["","","","","","","","","","","","","","","","","","","","","","","","",],
-    ["","","","","","","","","","","","","","","","","","","","","","","","",],
-    ["","","","","","","","","","","","","","","","","","","","","","","","",],
-    ["","","","","","","","","","","","","","","","","","","","","","","","",],
-    ["","","","","","","","","","","","","","","","","","","","","","","","",],
-    ["","","","","","","","","","","","","","","","","","","","","","","","",],
-    ["","","","","","","","","","","","","","","","","","","","","","","","",],
-    ["","","","","","","","","","","","","","","","","","","","","","","","",],
-    ["","","","","","","","","","","","","","","","","","","","","","","","",],
+const mapArray = [
+    "                        ",
+    "^^^^^^^^^^^^^^^^^^^^^^^^",
+    "^^^^^^^^^^^^^^^^^^^^^^^^",
+    "^^^^^^^^^^^^^^^^^^^^^^^^",
+    " ^^^|||||||||||||||||||^",
+    " ^^^|@@__hI|L|  V!V  R|^",
+    "/^^^|_____I|+|       R|^",
+    "+^^^|dD______| %lll%  |^",
+    "-^^^|||||==__| %%%%% y|^",
+    "*^^^^^^^||||+| sHHHs ||^",
+    " ^^^^^^^#$g| | %%%%% |^^",
+    "+^^^^^^^#..+ |E      |^^",
+    "-^^^^^^^#Z.| |T   iii|^^",
+    "*^^^^^^^#W.| ||||+||||^^",
+    " ^^^^^^^#|||  &&  y u|^^",
+    " ^^^^^^^^|           ||^",
+    " ^^^^^^^^|RRR   y    <|^",
+    " ^^^^^^^^|||||+||||||||^",
+    " ^^^^^^^^##m...Y.q#^^^^^",
+    " ^^^^^^^^^#m.....U#^^^^^",
+    " ^^^^^^^^^##zzzz.N#^^^^^",
+    " ^^^^^^^^^^########^^^^^",
+    " ^^^^^^^^^^^^^^^^^^^^^^^",
+    " ^^^^^^^^^^^^^^^^^^^^^^^"
 ];
-
-function createTiles() {
-    while(MapContainer.firstChild){
-        MapContainer.removeChild(MapContainer.firstChild);
+function createMap(){
+    for(let i=0;i<mapArray.length;i++){
+        for(let j=0;j<mapArray[i].length;j++){
+            let tile = document.createElement("div");
+            tile.classList.add("tile");
+            tile.textContent = `${mapArray[i][j]}`
+            mapContainer.appendChild(tile);
+        }
     }
-    console.log("probando");
-    Tiles.map((column) => {
-        column.map((row) => {
-            let tileRow = document.createElement("div");
-            tileRow.classList.add("tile");
-            tileRow.textContent = row;
-            // if(row == "||"){
-            //     tileRow.style.backgroundColor ="red"
-            // }
-            MapContainer.appendChild(tileRow);
-        })
-    })
-}
+};
 
-createTiles()
-window.addEventListener("keydown",(event) => moveCharacter(event))
+createMap()
+let initialPosition = 0;
+let contRow = 0;
+let char = 0;
 
+const tileArray = document.querySelectorAll(".tile");
+tileArray[initialPosition].textContent = "@"
 
-function moveCharacter(e){
-    console.log(e.key);
-    switch (e.key) {
+function movePlayer(initial, x,y,move){
+    let newPosition = 0;
+    switch (move) {
         case "ArrowUp":
-            jRow = jRow-1;
-            if(detectObjet(jRow,jCol)){
-                jRow = iRow;
-            } else {
-                [Tiles[iRow][iCol],Tiles[jRow][iCol]] = [Tiles[jRow][iCol],Tiles[iRow][iCol]];
-                iRow = iRow-1;
+            tileArray[initialPosition].textContent = mapArray[contRow][char]
+            contRow = contRow > 0 ? contRow - 1 : contRow;
+            newPosition = (24*contRow)+char
+            if(tileArray[newPosition] != undefined){
+                tileArray[newPosition].textContent = "@"
+                initialPosition = newPosition;
             }
-            createTiles();
             break;
         case "ArrowDown":
-            console.log(jRow);
-            jRow = jRow + 1;
-            if(detectObjet(jRow,jCol)){
-                jRow = iRow;
-            } else {
-                [Tiles[iRow][iCol],Tiles[jRow][iCol]] = [Tiles[jRow][iCol],Tiles[iRow][iCol]];
-                iRow = iRow+1;
+            tileArray[initialPosition].textContent = mapArray[contRow][char]
+            contRow = contRow < 24 ? contRow + 1 : contRow;
+            newPosition = (24*contRow)+char
+            if(tileArray[newPosition] != undefined){
+                tileArray[newPosition].textContent = "@"
+                initialPosition = newPosition;
             }
-            createTiles();
-            break;
-        case "ArrowRight":
-            jCol = jCol + 1;
-            if(detectObjet(jRow,jCol)){
-                jCol = iCol;
-            } else {
-                [Tiles[iRow][iCol],Tiles[jRow][jCol]] = [Tiles[jRow][jCol],Tiles[iRow][iCol]];
-                iCol = iCol+1;
-            }
-            createTiles();
             break;
         case "ArrowLeft":
-            jCol = jCol - 1;
-            if(detectObjet(jRow,jCol)){
-                jCol = iCol;
-            } else {
-                [Tiles[iRow][iCol],Tiles[jRow][jCol]] = [Tiles[jRow][jCol],Tiles[iRow][iCol]];
-                iCol = iCol-1;
+            tileArray[initialPosition].textContent = mapArray[contRow][char]
+            char = char > 0 ? char - 1 : 0;
+            console.log(char);
+            newPosition = (24*contRow)+char-1;
+            console.log(newPosition);
+            if(tileArray[newPosition] != undefined){
+                tileArray[newPosition].textContent = "@"
+                initialPosition = newPosition;
             }
-            createTiles();
+            break;
+        case "ArrowRight":
+            tileArray[initialPosition].textContent = mapArray[contRow][char]
+            char = char < 23 ? char + 1 : 0;
+            newPosition = (24*contRow)+char
+            if(tileArray[newPosition] != undefined){
+                tileArray[newPosition].textContent = "@"
+                initialPosition = newPosition;
+            }
             break;
         default:
             break;
     }
 };
 
-function detectObjet(row,column) {
-    switch (true) {
-        case Tiles[row] == undefined:
-            return true
-        case Tiles[row][column] == undefined:
-            return true;
-        case Tiles[row][column] == "||":
-            return true
+window.addEventListener("keydown",(e) => {
+    const {key} = e;
+    console.log(key);
+    switch (key) {
+        case "ArrowUp":
+            movePlayer(initialPosition,0,24,key);
+            break;
+        case "ArrowDown":
+            movePlayer(initialPosition,0,24,key);
+            break;
+        case "ArrowLeft":
+            movePlayer(initialPosition,1,0,key);
+            break;
+        case "ArrowRight":
+            movePlayer(initialPosition,1,0,key);
+            break;
         default:
             break;
     }
-}
+})
