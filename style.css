@@ -47,13 +47,20 @@ table {
 	border-spacing: 0;
 }
 /*/////////////////////////////////////*/
-
+body {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
 .map-container {
     display: grid;
-    grid-template-columns: repeat(24,24px);
-    grid-template-rows: repeat(24,24px);
+    grid-template-columns: repeat(24,32px);
+    grid-template-rows: repeat(24,32px);
+	background-color: rgb(255, 188, 73);
 }
 
 .tile{
     border: 1px solid black;
+	font-weight: 700;
+	font-size: 22px;
 }
