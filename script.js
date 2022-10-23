@@ -45,34 +45,44 @@ let char = 0;
 const tileArray = document.querySelectorAll(".tile");
 tileArray[initialPosition].textContent = "@"
 
-function movePlayer(initial, x,y,move){
+function movePlayer(move){
     let newPosition = 0;
     switch (move) {
         case "ArrowUp":
             tileArray[initialPosition].textContent = mapArray[contRow][char]
             contRow = contRow > 0 ? contRow - 1 : contRow;
-            newPosition = (24*contRow)+char
-            if(tileArray[newPosition] != undefined){
+            if(!detectObjet()) {
+                contRow = contRow + 1;
+                newPosition = (24*contRow)+char
+                tileArray[newPosition].textContent = "@";
+            } else {
+                newPosition = (24*contRow)+char
                 tileArray[newPosition].textContent = "@"
                 initialPosition = newPosition;
             }
             break;
         case "ArrowDown":
             tileArray[initialPosition].textContent = mapArray[contRow][char]
-            contRow = contRow < 24 ? contRow + 1 : contRow;
-            newPosition = (24*contRow)+char
-            if(tileArray[newPosition] != undefined){
+            contRow = contRow < 23 ? contRow + 1 : contRow;
+            if(!detectObjet()){
+                contRow = contRow - 1;
+                newPosition = (24*contRow)+char;
+                tileArray[newPosition].textContent = "@"
+            } else {
+                newPosition = (24*contRow)+char
                 tileArray[newPosition].textContent = "@"
                 initialPosition = newPosition;
             }
             break;
         case "ArrowLeft":
             tileArray[initialPosition].textContent = mapArray[contRow][char]
-            char = char > 0 ? char - 1 : 0;
-            console.log(char);
-            newPosition = (24*contRow)+char-1;
-            console.log(newPosition);
-            if(tileArray[newPosition] != undefined){
+            char = char < 23 && char > 0 ? char - 1 : 0;
+            if(!detectObjet()){
+                char = char + 1;
+                newPosition = (24*contRow)+char;
+                tileArray[newPosition].textContent = "@"
+            } else {
+                newPosition = (24*contRow)+char;
                 tileArray[newPosition].textContent = "@"
                 initialPosition = newPosition;
             }
@@ -80,9 +90,13 @@ function movePlayer(initial, x,y,move){
         case "ArrowRight":
             tileArray[initialPosition].textContent = mapArray[contRow][char]
             char = char < 23 ? char + 1 : 0;
-            newPosition = (24*contRow)+char
-            if(tileArray[newPosition] != undefined){
-                tileArray[newPosition].textContent = "@"
+            if(!detectObjet()){
+                char = char - 1;
+                newPosition = (24*contRow)+char;
+                tileArray[newPosition].textContent = "@";
+            } else {
+                newPosition = (24*contRow)+char;
+                tileArray[newPosition].textContent = "@";
                 initialPosition = newPosition;
             }
             break;
@@ -91,21 +105,33 @@ function movePlayer(initial, x,y,move){
     }
 };
 
+function detectObjet() {
+    switch (true) {
+        // case mapArray[contRow] == undefined || mapArray[contRow][char] == undefined:
+        //     return false
+        //     break;
+        case mapArray[contRow][char] == "|":
+            return false
+        default:
+            return true
+            break;
+    }
+}
+
 window.addEventListener("keydown",(e) => {
     const {key} = e;
-    console.log(key);
     switch (key) {
         case "ArrowUp":
-            movePlayer(initialPosition,0,24,key);
+            movePlayer(key);
             break;
         case "ArrowDown":
-            movePlayer(initialPosition,0,24,key);
+            movePlayer(key);
             break;
         case "ArrowLeft":
-            movePlayer(initialPosition,1,0,key);
+            movePlayer(key);
             break;
         case "ArrowRight":
-            movePlayer(initialPosition,1,0,key);
+            movePlayer(key);
             break;
         default:
             break;
